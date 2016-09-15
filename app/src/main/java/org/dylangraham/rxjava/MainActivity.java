@@ -58,4 +58,12 @@ public class MainActivity extends AppCompatActivity {
     private void configureLayout() {
         setContentView(R.layout.activity_main);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (stuffSubscription != null && ! stuffSubscription.isUnsubscribed()) {
+            stuffSubscription.unsubscribe();
+        }
+    }
 }
