@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -16,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private StuffGenerator stuffGenerator;
     private Subscription stuffSubscription;
+    @BindView(R.id.stuff_text) TextView stuffText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayStuff(List<String> stuff) {
-        TextView text = (TextView) findViewById(R.id.stuff_text);
-        text.setText(stuff.toString());
+        stuffText.setText(stuff.toString());
     }
 
     private void configureLayout() {
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
     }
 
     @Override
