@@ -37,22 +37,7 @@ public class MainActivity extends AppCompatActivity {
         stuffSubscription = stuffObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<String>>() {
-                               @Override
-                               public void onCompleted() {
-
-                               }
-
-                               @Override
-                               public void onError(Throwable e) {
-
-                               }
-
-                               @Override
-                               public void onNext(List<String> stuff) {
-                                   displayStuff(stuff);
-                               }
-                           });
+                .subscribe(s -> displayStuff(s));
     }
 
     private void displayStuff(List<String> stuff) {
