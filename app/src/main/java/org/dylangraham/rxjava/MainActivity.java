@@ -27,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
         createObservable();
     }
 
+    private void configureLayout() {
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+    }
+
     private void createObservable() {
         Observable<List<String>> stuffObservable =
                 Observable.fromCallable(() -> stuffGenerator.generateStuff());
@@ -39,11 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayStuff(List<String> stuff) {
         stuffText.setText(stuff.toString());
-    }
-
-    private void configureLayout() {
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
     }
 
     @Override
