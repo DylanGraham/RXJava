@@ -16,15 +16,12 @@ public class MainActivity extends AppCompatActivity {
 
     private StuffGenerator stuffGenerator;
     private Subscription stuffSubscription;
-    @BindView(R.id.stuff_text)
-    TextView stuffText;
+    @BindView(R.id.stuff_text) TextView stuffText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (BuildConfig.DEBUG) Timber.plant(new Timber.DebugTree());
-
         stuffGenerator = new StuffGenerator(this);
         configureLayout();
         createObservable();
