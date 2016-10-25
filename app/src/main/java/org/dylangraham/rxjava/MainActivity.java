@@ -47,12 +47,16 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(
                         this::displayStuff,
                         (Throwable t) -> Timber.d(t.getMessage()),
-                        () -> Timber.d("onCompleted()")
+                        this::onCompleted
                 );
     }
 
     private void displayStuff(String stuff) {
         stuffText.setText(stuff);
+    }
+
+    private void onCompleted() {
+        Timber.d("onCompleted()");
     }
 
     @Override
