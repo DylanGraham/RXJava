@@ -3,8 +3,7 @@ package org.dylangraham.rxjava;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class StuffGenerator {
     private Context context;
@@ -13,27 +12,18 @@ public class StuffGenerator {
         this.context = context;
     }
 
-    public List<String> generateStuff() {
+    public String generateStuff() {
         try {
             // "Simulate" the delay of network.
-            Thread.sleep(5000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return makeList();
     }
 
-    private List<String> makeList() {
-        List<String> stuffList = new ArrayList<>();
-        stuffList.add("abc");
-        stuffList.add("def");
-        stuffList.add("ghi");
-        stuffList.add("jkl");
-        stuffList.add("mno");
-        stuffList.add("pqr");
-        stuffList.add("stu");
-        stuffList.add("vwx");
-        stuffList.add("yz");
-        return stuffList;
+    private String makeList() {
+        Integer rand = ThreadLocalRandom.current().nextInt(0, 100);
+        return rand.toString();
     }
 }

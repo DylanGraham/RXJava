@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createObservable() {
-        Observable<List<String>> stuffObservable =
+        Observable<String> stuffObservable =
                 Observable.fromCallable(() -> stuffGenerator.generateStuff());
 
         stuffSubscription = stuffObservable
@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(s -> displayStuff(s));
     }
 
-    private void displayStuff(List<String> stuff) {
-        stuffText.setText(stuff.toString());
+    private void displayStuff(String stuff) {
+        stuffText.setText(stuff);
     }
 
     @Override
