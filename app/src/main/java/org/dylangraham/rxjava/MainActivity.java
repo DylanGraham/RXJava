@@ -45,12 +45,9 @@ public class MainActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        (s) -> {
-                            displayStuff(s);
-                        },
-                        (Throwable t) -> {
-                            Timber.d(t.getMessage());
-                        }
+                        (s) -> displayStuff(s),
+                        (Throwable t) -> Timber.d(t.getMessage()),
+                        () -> Timber.d("onCompleted()")
                 );
     }
 
