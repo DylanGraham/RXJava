@@ -16,7 +16,8 @@ public class MainActivity extends AppCompatActivity {
 
     private StuffGenerator stuffGenerator;
     private Subscription stuffSubscription;
-    @BindView(R.id.stuff_text) TextView stuffText;
+    @BindView(R.id.stuff_text)
+    TextView stuffText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void createObservable() {
         Observable<String> stuffObservable =
-                Observable.fromCallable(() -> stuffGenerator.generateStuff());
+                Observable.fromCallable(
+                        () -> stuffGenerator.generateStuff()
+                );
 
         stuffSubscription = stuffObservable
                 .subscribeOn(Schedulers.io())
