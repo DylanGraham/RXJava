@@ -4,24 +4,29 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
     private StuffGenerator stuffGenerator;
     private Subscription stuffSubscription;
-    @BindView(R.id.stuff_text) TextView stuffText;
+    @BindView(R.id.stuff_text)
+    TextView stuffText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
+
         stuffGenerator = new StuffGenerator(this);
         configureLayout();
         createObservable();
@@ -39,7 +44,14 @@ public class MainActivity extends AppCompatActivity {
         stuffSubscription = stuffObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> displayStuff(s));
+                .subscribe(
+                        (s) -> {
+                            displayStuff(s);
+                        },
+                        (Throwable t) -> {
+                            Timber.d(t.getMessage());
+                        }
+                );
     }
 
     private void displayStuff(String stuff) {
@@ -49,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (stuffSubscription != null && ! stuffSubscription.isUnsubscribed()) {
+        if (stuffSubscription != null && !stuffSubscription.isUnsubscribed()) {
             stuffSubscription.unsubscribe();
         }
     }
