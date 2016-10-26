@@ -50,14 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 );
     }
 
-    static Observable empty() {
-        return Observable.create(Observer::onCompleted);
-    }
-
-    static Observable never() {
-        return Observable.never();
-    }
-
     private void displayStuff(String stuff) {
         stuffText.setText(stuff);
     }
