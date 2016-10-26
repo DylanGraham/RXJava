@@ -7,6 +7,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -47,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
                         (Throwable t) -> Timber.d(t.getMessage()),
                         this::onCompleted
                 );
+    }
+
+    static Observable empty() {
+        return Observable.create(Observer::onCompleted);
+    }
+
+    static Observable never() {
+        return Observable.never();
     }
 
     private void displayStuff(String stuff) {
