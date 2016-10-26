@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         stuffGenerator = new StuffGenerator(this);
         configureLayout();
         createObservable();
+        createNumbersObservable();
     }
 
     private void configureLayout() {
@@ -36,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void createObservable() {
         Observable<String> stuffObservable =
-                Observable.fromCallable(
-                        () -> stuffGenerator.generateStuff()
+                Observable.fromCallable(() ->
+                        stuffGenerator.generateStuff()
                 );
 
         stuffSubscription = stuffObservable
@@ -48,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
                         (Throwable t) -> Timber.d(t.getMessage()),
                         this::onCompleted
                 );
+    }
+
+    private void createNumbersObservable() {
+        Observable.interval(1, TimeUnit.SECONDS)
+                .subscribe((Long i) -> Timber.d(i.toString()));
     }
 
     private void displayStuff(String stuff) {
