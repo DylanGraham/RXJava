@@ -1,13 +1,16 @@
 package org.dylangraham.rxjava;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -19,8 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private StuffGenerator stuffGenerator;
     private Subscription stuffSubscription;
-    @BindView(R.id.stuff_text)
-    TextView stuffText;
+    @BindView(R.id.stuff_text) TextView stuffText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         if (BuildConfig.DEBUG) Timber.plant(new Timber.DebugTree());
         stuffGenerator = new StuffGenerator(this);
         configureLayout();
-        createObservable();
+        //createObservable();
         createNumbersObservable();
     }
 
@@ -54,8 +56,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createNumbersObservable() {
-        Observable.interval(1, TimeUnit.SECONDS)
-                .subscribe((Long i) -> Timber.d(i.toString()));
+        Observable.interval(3, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((Long i) -> displayStuff(i.toString()));
+    }
+
+    @OnClick(R.id.floating_action_button)
+    public void clickFAB() {
+        Observable.just("Clicked")
+                .subscribe(this::displayStuff);
     }
 
     private void displayStuff(String stuff) {
