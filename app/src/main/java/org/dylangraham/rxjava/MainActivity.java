@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createNumbersObservable() {
-        Observable.interval(3, TimeUnit.SECONDS)
+        stuffSubscription = Observable.interval(3, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((Long i) -> displayStuff(i.toString()));
     }
