@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void createNumbersObservable() {
         Observable.interval(3, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((Long i) -> displayStuff(i.toString()));
     }
