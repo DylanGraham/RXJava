@@ -5,6 +5,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.view.RxView;
+
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -17,7 +19,7 @@ import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
-    private CompositeSubscription allSubscriptions = new CompositeSubscription();
+    private CompositeSubscription allSubscriptions;
     @BindView(R.id.stuff_text)
     TextView stuffText;
     @BindView(R.id.floating_action_button)
@@ -29,15 +31,23 @@ public class MainActivity extends AppCompatActivity {
         if (BuildConfig.DEBUG) Timber.plant(new Timber.DebugTree());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        createNumbersObservable();
+        createObservables();
     }
 
-    private void createNumbersObservable() {
-        Subscription subscription = Observable.interval(3, TimeUnit.SECONDS)
+    private void createObservables() {
+        allSubscriptions = new CompositeSubscription();
+
+        Subscription sub1 = Observable.interval(3, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(i -> displayStuff(i.toString()));
 
-        allSubscriptions.add(subscription);
+        Subscription sub2 = RxView.clicks(fab)
+                .subscribe(call -> displayStuff("CLICK CLICK"),
+                        (Throwable t) -> Timber.d(t.getMessage()),
+                        this::onCompleted);
+
+        allSubscriptions.add(sub1);
+        allSubscriptions.add(sub2);
     }
 
     @OnClick(R.id.floating_action_button)
@@ -57,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (allSubscriptions.hasSubscriptions() && !allSubscriptions.isUnsubscribed()) {
-            allSubscriptions.unsubscribe();
-        }
+        allSubscriptions.unsubscribe();
     }
 }
