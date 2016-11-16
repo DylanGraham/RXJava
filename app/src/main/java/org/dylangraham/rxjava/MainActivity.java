@@ -3,9 +3,11 @@ package org.dylangraham.rxjava;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxTextView;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     TextView stuffText;
     @BindView(R.id.floating_action_button)
     FloatingActionButton fab;
+    @BindView(R.id.edit_text)
+    EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +50,11 @@ public class MainActivity extends AppCompatActivity {
                         (Throwable t) -> Timber.d(t.getMessage()),
                         this::onCompleted);
 
-        allSubscriptions.add(sub1);
-        allSubscriptions.add(sub2);
+        Subscription sub3 = RxTextView.textChanges(editText)
+                .map(CharSequence::toString)
+                .subscribe(this::displayStuff);
+
+        allSubscriptions.addAll(sub1, sub2, sub3);
     }
 
     @OnClick(R.id.floating_action_button)
