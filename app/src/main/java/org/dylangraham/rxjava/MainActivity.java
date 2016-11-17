@@ -51,8 +51,11 @@ public class MainActivity extends AppCompatActivity {
                         this::onCompleted);
 
         Subscription sub3 = RxTextView.textChanges(editText)
+                .debounce(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .map(CharSequence::toString)
-                .subscribe(this::displayStuff);
+                .subscribe(this::displayStuff,
+                        (Throwable t) -> Timber.d(t.getMessage()),
+                        this::onCompleted);
 
         allSubscriptions.addAll(sub1, sub2, sub3);
     }
