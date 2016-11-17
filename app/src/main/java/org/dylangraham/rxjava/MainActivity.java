@@ -46,9 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(i -> displayStuff(i.toString()));
 
         Subscription sub2 = RxView.clicks(fab)
-                .subscribe(call -> displayStuff("CLICK CLICK"),
-                        (Throwable t) -> Timber.d(t.getMessage()),
-                        this::onCompleted);
+                .subscribe(call -> displayStuff("CLICK CLICK"));
 
         Subscription sub3 = RxTextView.textChanges(editText)
                 .debounce(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
