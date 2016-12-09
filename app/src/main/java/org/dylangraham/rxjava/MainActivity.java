@@ -17,7 +17,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
-    private CompositeDisposable allDisposables;
+    private CompositeDisposable disposables;
     @BindView(R.id.stuff_text)
     TextView stuffText;
     @BindView(R.id.floating_action_button)
@@ -35,17 +35,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createObservables() {
-        allDisposables = new CompositeDisposable();
+        disposables = new CompositeDisposable();
 
-        Observable.interval(3, TimeUnit.SECONDS)
+        disposables.add(Observable.interval(3, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(i -> displayStuff(i.toString()));
+                .subscribe(i -> displayStuff(i.toString())));
     }
 
     @OnClick(R.id.floating_action_button)
     public void clickFAB() {
-        Observable.just("Clicked")
-                .subscribe(this::displayStuff);
+        disposables.add(Observable.just("Clicked")
+                .subscribe(this::displayStuff));
     }
 
     private void displayStuff(String stuff) {
@@ -59,6 +59,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        allDisposables.clear();
+        disposables.clear();
     }
 }
