@@ -45,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.floating_action_button)
     public void clickFAB() {
         disposables.add(Observable.just("Clicked")
-                .subscribe(this::displayStuff));
+                .subscribe(this::displayStuff,
+                        this::onError,
+                        this::onCompleted));
     }
 
     private void displayStuff(String stuff) {
@@ -54,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void onCompleted() {
         Timber.d("onCompleted()");
+    }
+
+    private void onError(Throwable t) {
+        Timber.d(t.getMessage());
     }
 
     @Override
