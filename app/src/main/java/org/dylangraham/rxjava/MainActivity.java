@@ -6,22 +6,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
-
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
-    private CompositeSubscription allSubscriptions;
+    private CompositeDisposable allDisposables;
     @BindView(R.id.stuff_text)
     TextView stuffText;
     @BindView(R.id.floating_action_button)
@@ -39,23 +35,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createObservables() {
-        allSubscriptions = new CompositeSubscription();
+        allDisposables = new CompositeDisposable();
 
-        Subscription sub1 = Observable.interval(3, TimeUnit.SECONDS)
+        Observable.interval(3, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(i -> displayStuff(i.toString()));
-
-        Subscription sub2 = RxView.clicks(fab)
-                .subscribe(call -> displayStuff("CLICK CLICK"));
-
-        Subscription sub3 = RxTextView.textChanges(editText)
-                .debounce(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
-                .map(CharSequence::toString)
-                .subscribe(this::displayStuff,
-                        (Throwable t) -> Timber.d(t.getMessage()),
-                        this::onCompleted);
-
-        allSubscriptions.addAll(sub1, sub2, sub3);
     }
 
     @OnClick(R.id.floating_action_button)
@@ -75,6 +59,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        allSubscriptions.unsubscribe();
+        allDisposables.clear();
     }
 }
